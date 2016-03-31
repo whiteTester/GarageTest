@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui" xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+<h:head>
+
+
+</h:head>
+<h:body>
+	<h:form id="mainForm">
+		<div id="gui_main">
+
+			<h:panelGrid columns="2" cellpadding="5">
+				<p:outputLabel value="Car name:" />
+				<p:inputText size="10" value="#{carBean.currentCar.name}" />
+
+
+				<p:commandButton value="Add Car" ajax="false">
+					<p:collector value="#{carBean.currentCar}" unique="false" addTo="#{carBean.cars}"></p:collector>
+				</p:commandButton>
+
+			</h:panelGrid>
+
+			<h:panelGrid columns="2" cellpadding="5">
+				<p:outputLabel value="Choose Car:" />
+				<p:selectOneMenu value="#{carBean.selectedCar}" converter="carConverter">
+					<f:selectItems value="#{carBean.cars}" var="car" itemLabel="#{car.name}" itemValue="#{car}" />
+				</p:selectOneMenu>
+
+				<p:outputLabel value="Wheel name:" />
+				<p:inputText size="10" value="#{wheelBean.wheel.name}" />
+
+
+				<p:commandButton value="Add Wheel" ajax="false" actionListener="#{wheelBean.reinit}">
+					<p:collector value="#{wheelBean.wheel}" unique="false" addTo="#{carBean.selectedCar.wheels}"></p:collector>
+				</p:commandButton>
+
+			</h:panelGrid>
+
+			<br /> <br /> <br /> <br />
+			<c:forEach items="#{garageBean.garage.cars}" var="car" varStatus="loop">
+				<p:outputLabel value="Car name: #{car.name}" />
+				<br />
+				<c:forEach items="#{car.wheels}" var="wheel" varStatus="loop2">
+					<p:outputLabel value="Wheel name: #{wheel.name}" />
+					<p:commandButton cellpadding="5" icon="ui-icon-trash" title="Delete wheel #{wheel.name}" action="#{car.removeWheel(wheel)}" ajax="false" />
+					<br />
+				</c:forEach>
+				<br />
+			</c:forEach>
+		</div>
+	</h:form>
+</h:body>
+</html>
